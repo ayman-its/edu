@@ -1,0 +1,87 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+
+enum FAQType {
+  GENERAL
+  ACADEMIC_SERVICES
+  TRAINING_SERVICES
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  password      String?  
+  googleId      String?   @unique
+  profileImage  String?
+  otpCode       String?
+  otpExpiry     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  reviews       Testimonial[]
+}
+
+model AcademicCategory {
+  id        String     @id @default(cuid())
+  title     String    
+  services  AcademicService[]
+  createdAt DateTime   @default(now())
+}
+
+model AcademicService {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  categoryId  String
+  category    AcademicCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model CourseGroup {
+  id        String    @id @default(cuid())
+  title     String
+  courses   Course[]
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id          String     @id @default(cuid())
+  title       String
+  instructor  String
+  coursePhotoUrl string
+  description String
+  rating      Float       @default(0.0) 
+  price       Float
+  discount    Float     
+  groupId     String
+  group       CourseGroup @relation(fields: [groupId], references: [id])
+  createdAt   DateTime    @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  userName  String
+  specialty String
+  rating    Int
+  content   String  
+  createdAt DateTime @default(now())
+
+  userId    String?
+  user      User? @relation(fields: [userId], references: [id])
+}
+
+model FAQ {
+  id       String   @id @default(cuid())
+  question String
+  answer   String
+  type     FAQType
+  createdAt DateTime @default(now())
+}
