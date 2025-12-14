@@ -9,7 +9,6 @@ import {
 
 const router = Router();
 
-
 router.post("/signup", signupWithPassword);
 router.post("/login", login);
 router.post("/logout", logout);
