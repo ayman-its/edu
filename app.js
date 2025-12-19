@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import authRoutes from "./modules/auth/auth.routes.js";
+import authRoutes from "./modules/auth/auth.router.js";
+import academicRoutes from "./modules/academicServices/acad.router.js";
 
 const app = express();
 
@@ -28,5 +29,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/academic", academicRoutes);
 
 export default app;
