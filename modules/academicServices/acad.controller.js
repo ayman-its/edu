@@ -107,6 +107,9 @@ export const deleteCategory = async (req, res) => {
  */
 export const getAllCategories = async (req, res) => {
   try {
+
+
+    // adding filter by category id 
     const categories = await prisma.academicCategory.findMany({
       include: {
         services: {

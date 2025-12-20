@@ -118,6 +118,7 @@ export const deleteCourse = async (req, res) => {
   }
 };
 export const getAllCourses = async (req, res) => {
+  // adding filter by category id
   try {
     // Get all course groups (categories) with their courses and instructor
     const courseGroups = await prisma.courseGroup.findMany({

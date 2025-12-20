@@ -1,12 +1,8 @@
 import { Router } from "express";
-import {
-  createCourseGroup,
-
-} from "./course.controller.js";
+import { getHome } from "./home.controller.js";
 
 const router = Router();
 
-router.get("/", getHome);
-
+router.get("/home", getHome);
 
 export default router;
