@@ -3,7 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./modules/auth/auth.router.js";
 import academicRoutes from "./modules/academicServices/acad.router.js";
-
+import courseRoutes from "./modules/courseServices/course.router.js";
+import homeRoutes from "./modules/home/home.router.js";
 const app = express();
 
 const allowedOrigins = process.env.CLIENT_ORIGIN
@@ -30,5 +31,6 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/academic", academicRoutes);
-
+app.use("/api/course", courseRoutes);
+app.use("/",homeRoutes)
 export default app;

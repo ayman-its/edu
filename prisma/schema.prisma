@@ -30,6 +30,18 @@ model User {
   resetTokens   PasswordResetToken[]
 }
 
+model Instructor {
+  id          String       @id @default(cuid())
+  name        String
+  email       String?      @unique
+  bio         String?
+  photoUrl    String?
+  courses     Course[]
+  courseGroups CourseGroup[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
 model AcademicCategory {
   id        String     @id @default(cuid())
   title     String    
@@ -49,24 +61,27 @@ model AcademicService {
 }
 
 model CourseGroup {
-  id        String    @id @default(cuid())
-  title     String
-  courses   Course[]
-  createdAt DateTime @default(now())
+  id          String      @id @default(cuid())
+  title       String
+  courses     Course[]
+  instructorId String
+  instructor  Instructor  @relation(fields: [instructorId], references: [id])
+  createdAt   DateTime    @default(now())
 }
 
 model Course {
-  id          String     @id @default(cuid())
-  title       String
-  instructor  String
+  id            String      @id @default(cuid())
+  title         String
   coursePhotoUrl String
-  description String
-  rating      Float       @default(0.0) 
-  price       Float
-  discount    Float     
-  groupId     String
-  group       CourseGroup @relation(fields: [groupId], references: [id])
-  createdAt   DateTime    @default(now())
+  description   String
+  rating        Float       @default(0.0) 
+  price         Float
+  discount      Float     
+  groupId       String
+  group         CourseGroup @relation(fields: [groupId], references: [id])
+  instructorId  String
+  instructor    Instructor  @relation(fields: [instructorId], references: [id])
+  createdAt     DateTime    @default(now())
 }
 
 model Testimonial {
