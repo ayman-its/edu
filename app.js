@@ -10,13 +10,9 @@ import courseRoutes from "./modules/courseServices/course.router.js";
 import homeRoutes from "./modules/home/home.router.js";
 const app = express();
 
-const allowedOrigins = process.env.CLIENT_ORIGIN
-  ? process.env.CLIENT_ORIGIN.split(",")
-  : ["http://localhost:3000"];
-
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: true, // Allow all origins
     credentials: true,
   })
 );
