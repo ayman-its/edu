@@ -39,5 +39,5 @@ app.use("/api/articles", articlesRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/instructors", instructorsRoutes);
 
-app.use("/",homeRoutes)
+app.use("/", homeRoutes);
 export default app;

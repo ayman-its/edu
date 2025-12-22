@@ -107,9 +107,7 @@ export const deleteCategory = async (req, res) => {
  */
 export const getAllCategories = async (req, res) => {
   try {
-
-
-    // adding filter by category id 
+    // adding filter by category id
     const categories = await prisma.academicCategory.findMany({
       include: {
         services: {
@@ -284,14 +282,35 @@ export const getServiceById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (!id) {
+    // Decode URL-encoded ID and trim whitespace
+    const decodedId = id ? decodeURIComponent(id) : id;
+    const trimmedId = decodedId?.trim();
+
+    console.log("Raw ID from params:", id);
+    console.log("Decoded ID:", decodedId);
+    console.log("Trimmed ID:", trimmedId);
+    console.log("ID type:", typeof trimmedId);
+    console.log("ID length:", trimmedId?.length);
+
+    if (!trimmedId) {
       return res.status(400).json({
         message: "Service ID is required",
       });
     }
 
+    // Debug: Check if any services exist (only in development)
+    let sampleIds = [];
+    if (process.env.NODE_ENV === "development") {
+      const allServices = await prisma.academicService.findMany({
+        select: { id: true, title: true },
+        take: 5,
+      });
+      sampleIds = allServices.map((s) => s.id);
+      console.log("Sample service IDs in database:", sampleIds);
+    }
+
     const service = await prisma.academicService.findUnique({
-      where: { id },
+      where: { id: trimmedId },
       include: {
         category: {
           select: {
@@ -303,9 +322,21 @@ export const getServiceById = async (req, res) => {
       },
     });
 
+    console.log("Service found:", service ? "Yes" : "No");
+    if (service) {
+      console.log("Found service ID:", service.id);
+    }
+
     if (!service) {
       return res.status(404).json({
         message: "Service not found",
+        debug:
+          process.env.NODE_ENV === "development"
+            ? {
+                searchedId: trimmedId,
+                sampleIds: sampleIds,
+              }
+            : undefined,
       });
     }
 
