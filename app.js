@@ -3,6 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./modules/auth/auth.router.js";
 import academicRoutes from "./modules/academicServices/acad.router.js";
+import articlesRoutes from "./modules/articles/articles.router.js";
+import libraryRoutes from "./modules/elecLibrary/library.router.js";
+import instructorsRoutes from "./modules/courseServices/course.router.js";
 import courseRoutes from "./modules/courseServices/course.router.js";
 import homeRoutes from "./modules/home/home.router.js";
 const app = express();
@@ -32,5 +35,9 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/academic", academicRoutes);
 app.use("/api/course", courseRoutes);
+app.use("/api/articles", articlesRoutes);
+app.use("/api/library", libraryRoutes);
+app.use("/api/instructors", instructorsRoutes);
+
 app.use("/",homeRoutes)
 export default app;

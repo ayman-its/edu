@@ -11,9 +11,11 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
+    seed: "prisma/seed.acad.services.js",
     path: "prisma/migrations",
   },
   datasource: {
-    url: env("DIRECT_URL"),
+    // Use DIRECT_URL for migrations to avoid connection pooler issues with prepared statements
+    url: env("DIRECT_URL") || env("DATABASE_URL"),
   },
 });

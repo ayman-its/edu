@@ -31,15 +31,16 @@ model User {
 }
 
 model Instructor {
-  id          String       @id @default(cuid())
-  name        String
-  email       String?      @unique
-  bio         String?
-  photoUrl    String?
-  courses     Course[]
-  courseGroups CourseGroup[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id            String       @id @default(cuid())
+  name          String
+  email         String?      @unique
+  bio           String?
+  photoUrl      String?
+  photoPublicId String?
+  courses       Course[]
+  courseGroups   CourseGroup[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model AcademicCategory {
@@ -70,18 +71,19 @@ model CourseGroup {
 }
 
 model Course {
-  id            String      @id @default(cuid())
-  title         String
-  coursePhotoUrl String
-  description   String
-  rating        Float       @default(0.0) 
-  price         Float
-  discount      Float     
-  groupId       String
-  group         CourseGroup @relation(fields: [groupId], references: [id])
-  instructorId  String
-  instructor    Instructor  @relation(fields: [instructorId], references: [id])
-  createdAt     DateTime    @default(now())
+  id              String      @id @default(cuid())
+  title           String
+  coursePhotoUrl  String?
+  photoPublicId   String?
+  description     String?
+  rating          Float       @default(0.0) 
+  price           Float?
+  discount        Float?     
+  groupId         String
+  group           CourseGroup @relation(fields: [groupId], references: [id])
+  instructorId    String
+  instructor      Instructor  @relation(fields: [instructorId], references: [id])
+  createdAt       DateTime    @default(now())
 }
 
 model Testimonial {
@@ -121,4 +123,45 @@ model PasswordResetToken {
   expiresAt  DateTime
   used       Boolean  @default(false)
   createdAt  DateTime @default(now())
+}
+
+
+model library {
+  id                String          @id @default(cuid())
+  title             String
+  content           String?
+  imageUrl          String?
+  photoPublicId     String?
+  categoryLibraryId String
+  categoryLibrary   categoryLibrary  @relation(fields: [categoryLibraryId], references: [id])
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model categoryLibrary {
+  id        String    @id @default(cuid())
+  name      String
+  libraries library[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model categoryArticle {
+  id        String    @id @default(cuid())
+  name      String
+  articles  article[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model article {
+  id              String          @id @default(cuid())
+  title           String
+  content         String?
+  imageUrl        String?
+  photoPublicId   String?
+  categoryArticleId String
+  categoryArticle categoryArticle @relation(fields: [categoryArticleId], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
