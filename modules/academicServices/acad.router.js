@@ -6,6 +6,7 @@ import {
   getAllCategories,
   getCategoryById,
   // Service operations
+  getAllServices,
   getServicesByCategoryId,
   getServiceById,
   createService,
@@ -46,6 +47,12 @@ router.delete("/categories/:id", deleteCategory);
 // ============================================
 // SERVICE ROUTES
 // ============================================
+
+/**
+ * GET /api/academic/services
+ * Get all academic services
+ */
+router.get("/services", getAllServices);
 
 /**
  * GET /api/academic/services/category/:categoryId

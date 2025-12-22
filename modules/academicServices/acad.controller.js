@@ -188,6 +188,39 @@ export const getCategoryById = async (req, res) => {
 // ============================================
 
 /**
+ * Get all academic services
+ * GET /api/academic/services
+ */
+export const getAllServices = async (req, res) => {
+  try {
+    const services = await prisma.academicService.findMany({
+      include: {
+        category: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({
+      message: "Services retrieved successfully",
+      data: services,
+    });
+  } catch (error) {
+    console.error("Error fetching all services:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+};
+
+/**
  * Get academic services by category ID
  * GET /api/academic/services/category/:categoryId
  */
