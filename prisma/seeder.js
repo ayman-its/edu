@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { seedArticles } from "./articles";
+import { seedResearchAbstract } from "./electronic-library";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -505,8 +507,8 @@ async function main() {
     }
   }
 
-  console.log("✓ FAQs seeded successfully");
-  console.log("Database seeding completed!");
+ seedArticles()
+  seedResearchAbstract();
 }
 
 main()

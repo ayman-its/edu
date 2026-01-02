@@ -146,22 +146,33 @@ model categoryLibrary {
   updatedAt DateTime  @updatedAt
 }
 
-model categoryArticle {
-  id        String    @id @default(cuid())
-  name      String
-  articles  article[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
+// model categoryArticle {
+//   id        String    @id @default(cuid())
+//   name      String
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+// }
 
 model article {
   id              String          @id @default(cuid())
   title           String
   content         String?
   imageUrl        String?
-  photoPublicId   String?
-  categoryArticleId String
-  categoryArticle categoryArticle @relation(fields: [categoryArticleId], references: [id])
+  
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+}
+
+model ResearchAbstract {
+  id            Int      @id @default(autoincrement())
+  title         String
+  ResearchType  String
+  subTitle      String?
+  author        String
+  degree        String
+  content       String   @db.Text
+  university    String?
+  location      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
