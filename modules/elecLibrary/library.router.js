@@ -5,6 +5,7 @@ import {
   getLibrary,
   updateLibrary,
   deleteLibrary,
+  getLibraryById,
 } from "./library.controller.js";
 
 const router = Router();
@@ -19,6 +20,7 @@ const upload = multer({
 
 router.post("/library", upload.single("image"), createLibrary);
 router.get("/library", getLibrary);
+router.get("/library/:id", getLibraryById);
 router.put("/library/:id", upload.single("image"), updateLibrary);
 router.delete("/library/:id", deleteLibrary);
 

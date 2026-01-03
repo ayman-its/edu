@@ -4,8 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { seedArticles } from "./articles";
-import { seedResearchAbstract } from "./electronic-library";
+import { seedArticles } from "./articles.js";
+import { seedResearchAbstract } from "./electronic-library.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -198,7 +198,9 @@ async function main() {
           rating: defaultRating,
           price: defaultPrice,
           discount: defaultDiscount,
-          groupId: createdCourseGroups[0].id,
+          group: {
+            connect: { id: createdCourseGroups[0].id },
+          },
         },
       });
     }
@@ -241,7 +243,9 @@ async function main() {
           rating: defaultRating,
           price: defaultPrice,
           discount: defaultDiscount,
-          groupId: createdCourseGroups[1].id,
+          group: {
+            connect: { id: createdCourseGroups[1].id },
+          },
         },
       });
     }
@@ -278,7 +282,9 @@ async function main() {
           rating: defaultRating,
           price: defaultPrice,
           discount: defaultDiscount,
-          groupId: createdCourseGroups[2].id,
+          group: {
+            connect: { id: createdCourseGroups[2].id },
+          },
         },
       });
     }
@@ -315,7 +321,9 @@ async function main() {
           rating: defaultRating,
           price: defaultPrice,
           discount: defaultDiscount,
-          groupId: createdCourseGroups[3].id,
+          group: {
+            connect: { id: createdCourseGroups[3].id },
+          },
         },
       });
     }
@@ -354,7 +362,9 @@ async function main() {
           rating: defaultRating,
           price: defaultPrice,
           discount: defaultDiscount,
-          groupId: createdCourseGroups[4].id,
+          group: {
+            connect: { id: createdCourseGroups[4].id },
+          },
         },
       });
     }
@@ -365,7 +375,6 @@ async function main() {
   // ============================================
   // FAQ SEEDING
   // ============================================
-
 
   // خدمات الارشاد الأكاديمي (Academic Services FAQs)
   const academicFAQs = [
@@ -449,7 +458,7 @@ async function main() {
   ];
 
   // Create all FAQs
-  const allFAQs = [ ...academicFAQs, ...trainingFAQs];
+  const allFAQs = [...academicFAQs, ...trainingFAQs];
 
   for (const faq of allFAQs) {
     // Check if FAQ already exists
@@ -467,7 +476,7 @@ async function main() {
     }
   }
 
- seedArticles()
+  seedArticles();
   seedResearchAbstract();
 }
 

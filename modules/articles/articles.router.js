@@ -3,6 +3,7 @@ import multer from "multer";
 import {
   createArticle,
   getArticles,
+  getArticleById,
   getArticlesByCategoryId,
   updateArticle,
   deleteArticle,
@@ -21,6 +22,7 @@ const upload = multer({
 router.post("/articles", upload.single("image"), createArticle);
 router.put("/articles/:id", upload.single("image"), updateArticle);
 router.get("/articles", getArticles);
+router.get("/articles/:id", getArticleById);
 router.get("/articles/category/:categoryId", getArticlesByCategoryId);
 router.delete("/articles/:id", deleteArticle);
 

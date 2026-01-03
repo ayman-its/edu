@@ -3,34 +3,19 @@ import { uploadFromBuffer } from "../../middleware/cloudinary.js";
 
 export const createLibrary = async (req, res) => {
   try {
-    const { title, content, imageUrl, categoryLibraryId } = req.body;
+    const { title, content, imageUrl, type } = req.body;
 
-    // Validate required fields
+    // Validate title
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
-    if (!categoryLibraryId) {
-      return res
-        .status(400)
-        .json({ message: "Category Library ID is required" });
-    }
-    if (typeof categoryLibraryId !== "string") {
-      return res
-        .status(400)
-        .json({ message: "Category Library ID must be a string" });
-    }
-    if (!categoryLibraryId.trim()) {
-      return res
-        .status(400)
-        .json({ message: "Category Library ID must be a non-empty string" });
-    }
 
-    // Check if category exists
-    const categoryLibrary = await prisma.categoryLibrary.findUnique({
-      where: { id: categoryLibraryId },
-    });
-    if (!categoryLibrary) {
-      return res.status(404).json({ message: "Category Library not found" });
+    // Validate Enum Type
+    const validTypes = ["ARABIC_ABSTRACTS", "ENGLISH_ABSTRACTS"];
+    if (!type || !validTypes.includes(type)) {
+      return res.status(400).json({
+        message: "Invalid type. Must be ARABIC_ABSTRACTS or ENGLISH_ABSTRACTS",
+      });
     }
 
     // 1. UPLOAD PHOTO
@@ -46,21 +31,16 @@ export const createLibrary = async (req, res) => {
     }
 
     // Build data object
-    const libraryData = {
-      title,
-      categoryLibraryId,
-    };
-
-    // Add optional fields only if they are provided
-    if (content !== undefined) libraryData.content = content;
-    if (libraryImageUrl !== undefined && libraryImageUrl !== null)
-      libraryData.imageUrl = libraryImageUrl;
-    if (photoPublicId !== undefined && photoPublicId !== null)
-      libraryData.photoPublicId = photoPublicId;
-
-    const library = await prisma.library.create({
-      data: libraryData,
+    const library = await prisma.ResearchAbstract.create({
+      data: {
+        title,
+        type,
+        content: content || null,
+        imageUrl: libraryImageUrl,
+        photoPublicId: photoPublicId,
+      },
     });
+
     res
       .status(201)
       .json({ message: "Library created successfully", data: library });
@@ -72,10 +52,9 @@ export const createLibrary = async (req, res) => {
 
 export const getLibrary = async (req, res) => {
   try {
-    const libraries = await prisma.library.findMany({
-      include: {
-        categoryLibrary: true,
-      },
+    // Removed the "include" because there is no more relation
+    const libraries = await prisma.ResearchAbstract.findMany({
+      orderBy: { createdAt: "desc" },
     });
     res.json(libraries);
   } catch (error) {
@@ -84,35 +63,44 @@ export const getLibrary = async (req, res) => {
   }
 };
 
+export const getLibraryById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    const library = await prisma.ResearchAbstract.findUnique({
+      where: { id },
+    });
+
+    if (!library) return res.status(404).json({ message: "Library not found" });
+
+    res.json(library);
+  } catch (error) {
+    console.error("Error fetching library by ID:", error);
+    res.status(500).json({ message: "Failed to get library by ID" });
+  }
+};
+
 export const updateLibrary = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, imageUrl, categoryLibraryId } = req.body;
+    const { title, content, imageUrl, type } = req.body;
 
-    // 1. UPLOAD PHOTO if new file is provided
-    let libraryImageUrl = imageUrl || null;
-    let photoPublicId = null;
+    let updateData = {};
+    if (title) updateData.title = title;
+    if (content) updateData.content = content;
+    if (type) updateData.type = type;
 
     if (req.file) {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/library",
       });
-      libraryImageUrl = result.secure_url;
-      photoPublicId = result.public_id;
+      updateData.imageUrl = result.secure_url;
+      updateData.photoPublicId = result.public_id;
+    } else if (imageUrl) {
+      updateData.imageUrl = imageUrl;
     }
 
-    // Build update data object
-    const updateData = {};
-    if (title !== undefined) updateData.title = title;
-    if (content !== undefined) updateData.content = content;
-    if (categoryLibraryId !== undefined)
-      updateData.categoryLibraryId = categoryLibraryId;
-    if (libraryImageUrl !== undefined && libraryImageUrl !== null)
-      updateData.imageUrl = libraryImageUrl;
-    if (photoPublicId !== undefined && photoPublicId !== null)
-      updateData.photoPublicId = photoPublicId;
-
-    const library = await prisma.library.update({
+    const library = await prisma.ResearchAbstract.update({
       where: { id },
       data: updateData,
     });
@@ -123,10 +111,11 @@ export const updateLibrary = async (req, res) => {
   }
 };
 
+// deleteLibrary stays the same as your original code
 export const deleteLibrary = async (req, res) => {
   try {
     const { id } = req.params;
-    await prisma.library.delete({
+    await prisma.ResearchAbstract.delete({
       where: { id },
     });
     res.json({ message: "Library deleted successfully" });

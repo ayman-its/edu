@@ -25,8 +25,8 @@ const khaledGroups = [
 // Define your groups and courses with desired values
 const groups = [
   {
-    name: "دورات اللغة",
-    folder: path.join(baseDir, "دورات اللغات"),
+    name: "دورات اللغات",
+    folder: path.join(baseDir, "كورسات اللغات"),
     courses: [
       {
         title: "general English",
@@ -93,7 +93,7 @@ const groups = [
   },
   {
     name: "دورات إدارة الأعمال والقيادة",
-    folder: path.join(baseDir, "دورات إدارة الأعمال والقيادة"),
+    folder: path.join(baseDir, "كورسات إدارة الأعمال والقيادة"),
     courses: [
       {
         title: "ريادة الأعمال",
@@ -435,7 +435,7 @@ const groups = [
 
   {
     name: "دورات علم النفس والصحة النفسية",
-    folder: path.join(baseDir, "دورات علم النفس والصحة النفسية"),
+    folder: path.join(baseDir, "كورسات علم النفس والصحة النفسية"),
     courses: [
       {
         title: "دبلومة التخاطب الخاصة",
@@ -587,8 +587,8 @@ async function resolveImagePath(folder, baseName) {
 const stripExt = (filename) => filename.replace(/\.[^/.]+$/, "");
 
 // Direct instructor IDs (from seed.instructor.js output)
-const mahmoudId = "cmjgpibm30000ocwko1qrv940";
-const khaledId = "cmjgpicum0001ocwkd138oif0";
+const mahmoudId = "cmjyv7yqf0000nswkug9ouhan";
+const khaledId = "cmjyv803s0001nswksikp6had";
 
 async function main() {
   let groupsCreated = 0;

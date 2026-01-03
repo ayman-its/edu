@@ -1,4 +1,4 @@
-import prisma from "../config/prisma";
+import prisma from "../config/prisma.js";
 
 export async function seedResearchAbstract() {
   console.log("🌱 Seeding Research Abstract...");
@@ -35,8 +35,8 @@ This study aims to provide necessary recommendations for grassroots community go
         "The Formation of National Identity of Arab Students in Bilingual Schools in Israel",
       subTitle: null,
       ResearchType: "english",
-      author: null,
-      degree: null,
+      author: "سيف علي سيف العذبة المري",
+      degree: "دراسة تطبيقية: وزارة التجارة والصناعة القطرية",
       university: null,
       location: "Israel",
       content: `This research study shows the formation of the national identity of the Arab student in the bilingual schools in Israel.
@@ -59,10 +59,10 @@ The success of these schools is attributed to the quality of the parents who cho
       title: "Dispositional Factors and Disclosure",
       subTitle:
         "The Relationship Between Personality, Temperament, and Autobiographical Memory Disclosure in Children",
-      author: null,
+      author: "سيف علي سيف العذبة المري",
       ResearchType: "english",
 
-      degree: null,
+      degree: "دراسة تطبيقية: وزارة التجارة والصناعة القطرية",
       university: null,
       location: null,
       content: `Disclosure of past personal experiences (i.e., autobiographical memories; AMs) is critical to 
@@ -91,8 +91,7 @@ Potential clinical implications, limitations of the study, and future direction 
       subTitle: "دراسة تطبيقية على بعض المنظمات المصرية",
       author: "هناء السيد الهادي",
       degree: "ماجستير",
-      university: "جامعة بنها – كلية التجارة",
-      department: "إدارة الأعمال",
+      university: "جامعة بنها - كلية التجارة",
       ResearchType: "arabic",
 
       location: "مصر",
@@ -120,7 +119,7 @@ Potential clinical implications, limitations of the study, and future direction 
       title:
         "أثر المواعية بين الاستراتيجية والهيكل التنظيمي على أداء العاملين في المؤسسات الحكومية القطرية",
       author: "سيف علي سيف العذبة المري",
-      supervisor: "د. يعقوب حمدان",
+
       degree: "دراسة تطبيقية: وزارة التجارة والصناعة القطرية",
       ResearchType: "arabic",
       content: `
@@ -143,8 +142,8 @@ Potential clinical implications, limitations of the study, and future direction 
       title:
         "دور معايير القيادة في مواقف الموظفين والموظفات نحو قيادة المرأة: بعض المؤسسات الحكومية أنموذجاً",
       author: "كفا مشعل العكروش",
-      supervisor: "الأستاذ الدكتور موسى شتيوي",
-      degree: null, // لم يذكر درجة محددة
+
+      degree: "دراسة تطبيقية: وزارة التجارة والصناعة القطرية", // لم يذكر درجة محددة
       ResearchType: "arabic",
       content: `
 المخلص
@@ -177,9 +176,17 @@ Potential clinical implications, limitations of the study, and future direction 
       `,
     },
   ];
-  await prisma.researchAbstract.createMany({
+  await prisma.ResearchAbstract.createMany({
     data: reasearchData,
   });
 
   console.log("✅ Research Abstract seeded successfully");
 }
+seedResearchAbstract()
+  .catch((e) => {
+    console.error("❌ Seeding failed:", e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
