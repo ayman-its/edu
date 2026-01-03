@@ -76,6 +76,9 @@ model Course {
   coursePhotoUrl  String?
   photoPublicId   String?
   description     String?
+  courseBenefits  String?
+  wayOfTraining   String?
+  targetAudience  String?
   rating          Float       @default(0.0) 
   price           Float?
   discount        Float?     
@@ -164,4 +167,8 @@ model article {
   categoryArticle categoryArticle @relation(fields: [categoryArticleId], references: [id])
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+}
+
+model electronicLibrary {
+  
 }

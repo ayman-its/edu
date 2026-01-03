@@ -71,6 +71,9 @@ export const createCourse = async (req, res) => {
       description,
       price,
       discount,
+      courseBenefits,
+      wayOfTraining,
+      targetAudience,
     } = req.body;
 
     // Validate required fields
@@ -107,6 +110,11 @@ export const createCourse = async (req, res) => {
     if (description !== undefined) courseData.description = description;
     if (price !== undefined) courseData.price = price;
     if (discount !== undefined) courseData.discount = discount;
+    if (courseBenefits !== undefined)
+      courseData.courseBenefits = courseBenefits;
+    if (wayOfTraining !== undefined) courseData.wayOfTraining = wayOfTraining;
+    if (targetAudience !== undefined)
+      courseData.targetAudience = targetAudience;
 
     const course = await prisma.course.create({
       data: courseData,
@@ -128,6 +136,9 @@ export const updateCourse = async (req, res) => {
       description,
       price,
       discount,
+      courseBenefits,
+      wayOfTraining,
+      targetAudience,
     } = req.body;
 
     // Check if course exists
@@ -193,6 +204,11 @@ export const updateCourse = async (req, res) => {
     if (description !== undefined) updateData.description = description;
     if (price !== undefined) updateData.price = price;
     if (discount !== undefined) updateData.discount = discount;
+    if (courseBenefits !== undefined)
+      updateData.courseBenefits = courseBenefits;
+    if (wayOfTraining !== undefined) updateData.wayOfTraining = wayOfTraining;
+    if (targetAudience !== undefined)
+      updateData.targetAudience = targetAudience;
 
     // If no fields to update
     if (Object.keys(updateData).length === 0) {
@@ -293,12 +309,6 @@ export const getCourseById = async (req, res) => {
     const decodedId = id ? decodeURIComponent(id) : id;
     const trimmedId = decodedId?.trim();
 
-    console.log("Raw ID from params:", id);
-    console.log("Decoded ID:", decodedId);
-    console.log("Trimmed ID:", trimmedId);
-    console.log("ID type:", typeof trimmedId);
-    console.log("ID length:", trimmedId?.length);
-
     if (!trimmedId) {
       return res.status(400).json({
         message: "Course ID is required",
@@ -318,6 +328,10 @@ export const getCourseById = async (req, res) => {
 
     const course = await prisma.course.findUnique({
       where: { id: trimmedId },
+      include: {
+        group: true,
+        instructor: true,
+      },
     });
 
     console.log("Course found:", course ? "Yes" : "No");

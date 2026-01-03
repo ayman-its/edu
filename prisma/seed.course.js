@@ -12,37 +12,46 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Base directory where the group folders and photos live
 const baseDir = "C:/Users/ITS/Desktop/frontend-of-elmanase/edu";
 
-// Helper to set default price/discount if you leave them undefined
 const defPrice = 100;
 const defDiscount = 0;
 
-// Groups that should be assigned to Khaled; others go to Mahmoud
 const khaledGroups = [
   "دورات التنمية البشرية",
-  "كورسات علم النفس والصحة النفسية",
+  "دورات علم النفس والصحة النفسية",
 ];
 
 // Define your groups and courses with desired values
 const groups = [
   {
-    name: "كورسات اللغة",
-    folder: path.join(baseDir, "كورسات اللغات"),
+    name: "دورات اللغة",
+    folder: path.join(baseDir, "دورات اللغات"),
     courses: [
       {
         title: "general English",
         price: 150,
         discount: 10,
         description: "دورة اللغة الإنجليزية العامة.",
-        imageFile: "general English.jpg", // adjust extension
+        courseBenefits:
+          "تنمية مهارات القراءة والكتابة والاستماع والمحادثة، تحسين النطق السليم، زيادة الثقة في استخدام اللغة في الحياة اليومية.",
+        wayOfTraining:
+          "شرح مبسط، تدريبات تطبيقية، أنشطة تفاعلية، محادثات عملية.",
+        targetAudience:
+          "المبتدئون في تعلم اللغة الإنجليزية، الطلاب، وكل من يرغب في تحسين مستواه العام.",
+        imageFile: "general English.jpg",
       },
       {
         title: "IELTS",
         price: 180,
         discount: 15,
         description: "إعداد اختبار IELTS.",
+        courseBenefits:
+          "التعرف على أقسام اختبار IELTS، تحسين مهارات الإجابة، التدريب على نماذج امتحانات حقيقية.",
+        wayOfTraining:
+          "محاضرات متخصصة، تدريبات عملية، اختبارات تجريبية، مراجعات مستمرة.",
+        targetAudience:
+          "الراغبون في الهجرة أو الدراسة بالخارج، وطلاب الجامعات.",
         imageFile: "IELTS.jpg",
       },
       {
@@ -50,6 +59,11 @@ const groups = [
         price: 180,
         discount: 15,
         description: "إعداد اختبار TOEFL.",
+        courseBenefits:
+          "فهم نظام اختبار TOEFL، تحسين مهارات اللغة الأكاديمية، زيادة فرص الحصول على درجات مرتفعة.",
+        wayOfTraining: "شرح تفصيلي، تدريبات مكثفة، نماذج اختبارات، توجيه فردي.",
+        targetAudience:
+          "طلاب الجامعات والدراسات العليا والراغبون في الدراسة بالخارج.",
         imageFile: "TOFEL.jpg",
       },
       {
@@ -57,6 +71,11 @@ const groups = [
         price: 160,
         discount: 10,
         description: "تدريب شامل للغة الإنجليزية.",
+        courseBenefits:
+          "تطوير شامل لمهارات اللغة، تحسين الطلاقة، الاستخدام العملي للغة في بيئة العمل.",
+        wayOfTraining: "تدريب عملي، تمارين تفاعلية، محادثات، مواقف واقعية.",
+        targetAudience:
+          "الخريجون، الموظفون، وكل من يحتاج اللغة الإنجليزية في العمل.",
         imageFile: "English Traning.jpg",
       },
       {
@@ -64,19 +83,28 @@ const groups = [
         price: 140,
         discount: 5,
         description: "مهارات المحادثة الإنجليزية.",
+        courseBenefits:
+          "تحسين الطلاقة، التخلص من رهبة التحدث، استخدام التعبيرات اليومية بثقة.",
+        wayOfTraining: "جلسات محادثة، تمثيل أدوار، مناقشات جماعية.",
+        targetAudience: "من لديهم أساسيات اللغة ويرغبون في تحسين التحدث.",
         imageFile: "Conversation.jpg",
       },
     ],
   },
   {
-    name: "كورسات إدارة الأعمال والقيادة",
-    folder: path.join(baseDir, "كورسات إدارة الأعمال والقيادة"),
+    name: "دورات إدارة الأعمال والقيادة",
+    folder: path.join(baseDir, "دورات إدارة الأعمال والقيادة"),
     courses: [
       {
         title: "ريادة الأعمال",
         price: 200,
         discount: 10,
         description: "ريادة الأعمال",
+        courseBenefits:
+          "فهم أساسيات إنشاء المشاريع، تطوير الأفكار الريادية، إدارة المخاطر.",
+        wayOfTraining: "محاضرات عملية، دراسات حالة، مناقشات تطبيقية.",
+        targetAudience:
+          "رواد الأعمال، أصحاب المشاريع الناشئة، المهتمون بإنشاء أعمالهم الخاصة.",
         imageFile: "ريادة أعمال.jpg",
       },
       {
@@ -84,6 +112,10 @@ const groups = [
         price: 200,
         discount: 10,
         description: "إدارة المشروعات",
+        courseBenefits:
+          "التخطيط الفعّال للمشروعات، إدارة الوقت والتكلفة، متابعة التنفيذ.",
+        wayOfTraining: "شرح نظري، تطبيقات عملية، نماذج واقعية.",
+        targetAudience: "مديرو المشروعات، المهندسون، العاملون في فرق العمل.",
         imageFile: "إدارة المشروعات.jpg",
       },
       {
@@ -91,6 +123,11 @@ const groups = [
         price: 180,
         discount: 10,
         description: "مهارات اتخاذ القرار وحل المشكلات",
+        courseBenefits:
+          "تحليل المشكلات بفعالية، اتخاذ قرارات سليمة، تحسين التفكير المنطقي.",
+        wayOfTraining: "تمارين ذهنية، حالات عملية، نقاشات تفاعلية.",
+        targetAudience:
+          "المديرون، القادة، وكل من يعمل في بيئات تتطلب قرارات سريعة.",
         imageFile: "حل المشكلات (2).jpg",
       },
       {
@@ -98,6 +135,10 @@ const groups = [
         price: 190,
         discount: 10,
         description: "إعداد المديرين",
+        courseBenefits:
+          "تنمية المهارات الإدارية، تحسين أساليب القيادة، إدارة فرق العمل.",
+        wayOfTraining: "محاضرات تدريبية، ورش عمل، تطبيقات عملية.",
+        targetAudience: "المديرون الجدد، المشرفون، المرشحون للمناصب القيادية.",
         imageFile: "إعداد المديرين.jpg",
       },
       {
@@ -105,6 +146,10 @@ const groups = [
         price: 190,
         discount: 10,
         description: "إعداد القادة",
+        courseBenefits:
+          "بناء الشخصية القيادية، تعزيز مهارات التأثير، قيادة الفرق بفعالية.",
+        wayOfTraining: "تدريب تفاعلي، دراسات حالة، أنشطة قيادية.",
+        targetAudience: "القادة، المديرون، الطامحون للمناصب القيادية.",
         imageFile: "إعداد القادة.jpg",
       },
       {
@@ -112,6 +157,10 @@ const groups = [
         price: 180,
         discount: 10,
         description: "مهارات التسويق",
+        courseBenefits:
+          "فهم أساسيات التسويق، تطوير استراتيجيات فعالة، تحليل السوق.",
+        wayOfTraining: "شرح تطبيقي، أمثلة واقعية، تمارين عملية.",
+        targetAudience: "المسوقون، أصحاب الأعمال، المهتمون بالتسويق.",
         imageFile: "مهارات التسويق.jpg",
       },
       {
@@ -119,6 +168,10 @@ const groups = [
         price: 180,
         discount: 10,
         description: "مهارات التفاوض",
+        courseBenefits:
+          "تحسين أساليب التفاوض، تحقيق أفضل النتائج، إدارة الخلافات.",
+        wayOfTraining: "تمثيل أدوار، حالات تفاوض، تدريب عملي.",
+        targetAudience: "المديرون، موظفو المبيعات، وكل من يتعامل مع التفاوض.",
         imageFile: "مهارات التفاوض.jpg",
       },
       {
@@ -126,6 +179,9 @@ const groups = [
         price: 200,
         discount: 15,
         description: "التخطيط الاستراتيجي",
+        courseBenefits: "وضع خطط طويلة المدى، تحليل البيئة الداخلية والخارجية.",
+        wayOfTraining: "محاضرات متخصصة، دراسات حالة، تطبيقات عملية.",
+        targetAudience: "الإدارة العليا، القيادات التنفيذية.",
         imageFile: "التخطيط الاستراتيجي.jpg",
       },
       {
@@ -133,6 +189,10 @@ const groups = [
         price: 190,
         discount: 10,
         description: "الموارد البشرية",
+        courseBenefits:
+          "فهم إدارة الموارد البشرية، تطوير سياسات التوظيف والتقييم.",
+        wayOfTraining: "شرح نظري، تطبيقات عملية، نماذج إدارية.",
+        targetAudience: "موظفو الموارد البشرية، المديرون.",
         imageFile: "HR.jpg",
       },
       {
@@ -140,6 +200,9 @@ const groups = [
         price: 190,
         discount: 10,
         description: "القيادة الفعالة",
+        courseBenefits: "تعزيز مهارات القيادة، بناء فرق ناجحة، تحقيق الأهداف.",
+        wayOfTraining: "تدريب تفاعلي، مناقشات، تمارين عملية.",
+        targetAudience: "القادة، المديرون، المشرفون.",
         imageFile: "القيادة الفعالة.jpg",
       },
       {
@@ -147,6 +210,9 @@ const groups = [
         price: 200,
         discount: 15,
         description: "الحوكمة الرشيدة",
+        courseBenefits: "تعزيز الشفافية، تحسين نظم الرقابة، الالتزام المؤسسي.",
+        wayOfTraining: "محاضرات تخصصية، دراسات حالة.",
+        targetAudience: "الإدارة العليا، القيادات المؤسسية.",
         imageFile: "الحوكمة الرشيدة.jpg",
       },
       {
@@ -154,6 +220,9 @@ const groups = [
         price: 170,
         discount: 10,
         description: "كتابة التقارير والمكاتبات الرسمية",
+        courseBenefits: "تحسين أسلوب الكتابة، إعداد تقارير احترافية.",
+        wayOfTraining: "شرح عملي، نماذج تطبيقية، تدريبات كتابية.",
+        targetAudience: "الموظفون الإداريون، السكرتارية، المديرون.",
         imageFile: "كتابة التقارير والمكاتبات الرسمية.jpg",
       },
       {
@@ -161,6 +230,9 @@ const groups = [
         price: 190,
         discount: 10,
         description: "إدارة الموارد البشرية",
+        courseBenefits: "إدارة الكفاءات، تطوير الأداء الوظيفي.",
+        wayOfTraining: "محاضرات، تطبيقات عملية.",
+        targetAudience: "مديرو الموارد البشرية، مسؤولو التوظيف.",
         imageFile: "إدارة الموارد البشرية.jpg",
       },
       {
@@ -168,6 +240,9 @@ const groups = [
         price: 220,
         discount: 15,
         description: "دبلومة إدارة الأعمال الرقمية",
+        courseBenefits: "فهم التحول الرقمي، إدارة الأعمال الحديثة.",
+        wayOfTraining: "تدريب شامل، حالات عملية، مشاريع تطبيقية.",
+        targetAudience: "أصحاب الأعمال، المديرون، رواد الأعمال.",
         imageFile: "دبلومة إدارة الأعمال الرقمية.jpg",
       },
     ],
@@ -181,6 +256,11 @@ const groups = [
         price: 180,
         discount: 10,
         description: "إعداد معلم المستقبل",
+        courseBenefits:
+          "تنمية مهارات التدريس الحديثة، استخدام استراتيجيات التعليم النشط، تطوير القدرة على التعامل مع الطلاب بفاعلية.",
+        wayOfTraining: "محاضرات تدريبية، تطبيقات عملية، ورش عمل تعليمية.",
+        targetAudience:
+          "المعلمون، خريجو كليات التربية، وكل من يرغب في العمل بمجال التعليم.",
         imageFile: "إعداد معلم المستقبل.jpg",
       },
       {
@@ -188,6 +268,10 @@ const groups = [
         price: 180,
         discount: 10,
         description: "إعداد محاضر رقمي",
+        courseBenefits:
+          "إتقان مهارات الإلقاء الرقمي، إعداد محتوى تعليمي إلكتروني، استخدام أدوات التعليم عن بُعد.",
+        wayOfTraining: "تدريب عملي، تطبيقات رقمية، محاضرات تفاعلية.",
+        targetAudience: "المحاضرون، المدربون، العاملون في التعليم الإلكتروني.",
         imageFile: "إعداد محاضر رقمي.jpg",
       },
       {
@@ -195,6 +279,10 @@ const groups = [
         price: 200,
         discount: 10,
         description: "إعداد باحث علمي محترف",
+        courseBenefits:
+          "تنمية مهارات البحث العلمي، إعداد الرسائل العلمية، استخدام أدوات التحليل الأكاديمي.",
+        wayOfTraining: "شرح منهجي، تطبيقات بحثية، نماذج عملية.",
+        targetAudience: "طلاب الدراسات العليا، الباحثون، أعضاء هيئة التدريس.",
         imageFile: "إعداد باحث علمي محترف.jpg",
       },
       {
@@ -202,6 +290,10 @@ const groups = [
         price: 200,
         discount: 10,
         description: "إعداد أخصائي نظم معلومات",
+        courseBenefits:
+          "فهم نظم المعلومات، تحليل البيانات، دعم اتخاذ القرار المؤسسي.",
+        wayOfTraining: "محاضرات تطبيقية، دراسات حالة، تدريب عملي.",
+        targetAudience: "خريجو الحاسبات، العاملون في مجال تكنولوجيا المعلومات.",
         imageFile: "إعداد أخصائي نظم معلومات.jpg",
       },
       {
@@ -209,6 +301,10 @@ const groups = [
         price: 180,
         discount: 10,
         description: "إعداد المدربين",
+        courseBenefits:
+          "اكتساب مهارات التدريب الاحترافي، تصميم البرامج التدريبية، تحسين أسلوب العرض.",
+        wayOfTraining: "ورش عمل، تمثيل أدوار، تطبيقات عملية.",
+        targetAudience: "المدربون، الراغبون في العمل بالمجال التدريبي.",
         imageFile: "إعداد المدربين.jpg",
       },
       {
@@ -216,6 +312,10 @@ const groups = [
         price: 160,
         discount: 10,
         description: "دورة مهارات التدريس",
+        courseBenefits:
+          "تحسين أساليب الشرح، إدارة الفصل الدراسي، توصيل المعلومة بفاعلية.",
+        wayOfTraining: "شرح تطبيقي، تدريبات تعليمية، أمثلة عملية.",
+        targetAudience: "المعلمين، المحاضرين، المدربين.",
         imageFile: "دورة مهارات التدريس.jpg",
       },
       {
@@ -223,6 +323,12 @@ const groups = [
         price: 220,
         discount: 15,
         description: "دبلومة التحليل الإحصائي",
+        courseBenefits:
+          "تحليل البيانات بدقة، استخدام البرامج الإحصائية، دعم البحث العلمي.",
+        wayOfTraining:
+          "شرح عملي، تطبيقات إحصائية، تدريبات باستخدام أمثلة حقيقية.",
+        targetAudience:
+          "الباحثون، طلاب الدراسات العليا، المهتمون بالتحليل الإحصائي.",
         imageFile: "دبلومة التحليل الإحصائي.jpg",
       },
       {
@@ -230,6 +336,11 @@ const groups = [
         price: 240,
         discount: 15,
         description: "دبلومة الأمن السيبراني",
+        courseBenefits:
+          "فهم أساسيات الأمن السيبراني، حماية الأنظمة، التعرف على التهديدات الرقمية.",
+        wayOfTraining: "تدريب عملي، سيناريوهات واقعية، محاضرات تخصصية.",
+        targetAudience:
+          "متخصصو تقنية المعلومات، الطلاب، المهتمون بالأمن الرقمي.",
         imageFile: "دبلومة الأمن السيبراني.jpg",
       },
     ],
@@ -243,6 +354,9 @@ const groups = [
         price: 150,
         discount: 10,
         description: "Soft Skills",
+        courseBenefits: "تنمية مهارات التواصل، العمل الجماعي، إدارة الذات.",
+        wayOfTraining: "تدريب تفاعلي، تمارين جماعية، مواقف عملية.",
+        targetAudience: "الطلاب، الخريجون، الموظفون.",
         imageFile: "Soft Skills.jpg",
       },
       {
@@ -250,6 +364,9 @@ const groups = [
         price: 150,
         discount: 10,
         description: "اللغة الإنجليزية",
+        courseBenefits: "تحسين مستوى اللغة، تعزيز مهارات التواصل.",
+        wayOfTraining: "شرح مبسط، تدريبات عملية، محادثات.",
+        targetAudience: "المبتدئون والمهتمون بتعلم اللغة.",
         imageFile: "اللغة الإنجليزية.jpg",
       },
       {
@@ -257,6 +374,10 @@ const groups = [
         price: 170,
         discount: 10,
         description: "الذكاء الاصطناعي",
+        courseBenefits:
+          "فهم أساسيات الذكاء الاصطناعي، التعرف على تطبيقاته الحديثة.",
+        wayOfTraining: "شرح نظري، أمثلة تطبيقية.",
+        targetAudience: "الطلاب، المهتمون بالتقنية.",
         imageFile: "الذكاء الاصطناعي.jpg",
       },
       {
@@ -264,6 +385,9 @@ const groups = [
         price: 150,
         discount: 10,
         description: "إدارة الوقت",
+        courseBenefits: "تنظيم الوقت، زيادة الإنتاجية، تحقيق التوازن.",
+        wayOfTraining: "تمارين عملية، تطبيقات حياتية.",
+        targetAudience: "الطلاب، الموظفون.",
         imageFile: "إدارة الوقت.jpg",
       },
       {
@@ -271,6 +395,9 @@ const groups = [
         price: 160,
         discount: 10,
         description: "إدارة الغضب والضغوط",
+        courseBenefits: "السيطرة على الانفعالات، التعامل مع الضغوط بوعي.",
+        wayOfTraining: "جلسات تدريبية، تمارين نفسية.",
+        targetAudience: "جميع الفئات.",
         imageFile: "إدارة الغضب والضغوط.jpg",
       },
       {
@@ -278,6 +405,9 @@ const groups = [
         price: 170,
         discount: 10,
         description: "القيادة الشبابية",
+        courseBenefits: "تنمية روح القيادة، بناء الثقة بالنفس.",
+        wayOfTraining: "أنشطة قيادية، تدريب تفاعلي.",
+        targetAudience: "الشباب، طلاب الجامعات.",
         imageFile: "القيادة الشبابية.jpg",
       },
       {
@@ -285,6 +415,9 @@ const groups = [
         price: 160,
         discount: 10,
         description: "TOT",
+        courseBenefits: "إعداد مدربين محترفين، تطوير مهارات العرض.",
+        wayOfTraining: "ورش تدريبية، تطبيقات عملية.",
+        targetAudience: "المدربون، الراغبون في مجال التدريب.",
         imageFile: "TOT.jpg",
       },
       {
@@ -292,19 +425,26 @@ const groups = [
         price: 150,
         discount: 10,
         description: "المهارات الحياتية",
+        courseBenefits: "تحسين جودة الحياة، تعزيز مهارات التكيف.",
+        wayOfTraining: "أنشطة تفاعلية، تطبيقات يومية.",
+        targetAudience: "جميع الفئات العمرية.",
         imageFile: "المهارات الحياتية.jpg",
       },
     ],
   },
+
   {
-    name: "كورسات علم النفس والصحة النفسية",
-    folder: path.join(baseDir, "كورسات علم النفس والصحة النفسية"),
+    name: "دورات علم النفس والصحة النفسية",
+    folder: path.join(baseDir, "دورات علم النفس والصحة النفسية"),
     courses: [
       {
         title: "دبلومة التخاطب الخاصة",
         price: 220,
         discount: 15,
         description: "دبلومة التخاطب الخاصة",
+        courseBenefits: "تشخيص اضطرابات النطق، إعداد خطط علاجية فعالة.",
+        wayOfTraining: "محاضرات تخصصية، تدريب عملي.",
+        targetAudience: "أخصائيو التخاطب، المهتمون بالمجال.",
         imageFile: "دبلومة التخاطب الخاصة.jpg",
       },
       {
@@ -312,6 +452,9 @@ const groups = [
         price: 220,
         discount: 15,
         description: "دبلومة صعوبات التعلم",
+        courseBenefits: "تشخيص صعوبات التعلم، التعامل مع الحالات المختلفة.",
+        wayOfTraining: "شرح علمي، تطبيقات عملية.",
+        targetAudience: "المعلمين، الأخصائيين.",
         imageFile: "دبلومة صعوبات التعلم.jpg",
       },
       {
@@ -319,6 +462,9 @@ const groups = [
         price: 210,
         discount: 15,
         description: "دبلومة تعديل السلوك",
+        courseBenefits: "فهم السلوك الإنساني، تصميم برامج تعديل السلوك.",
+        wayOfTraining: "جلسات تدريبية، حالات عملية.",
+        targetAudience: "الأخصائيون النفسيون، المعلمون.",
         imageFile: "دبلومة تعديل السلوك.jpg",
       },
       {
@@ -326,6 +472,9 @@ const groups = [
         price: 230,
         discount: 15,
         description: "دبلومة طيف التوحد",
+        courseBenefits: "فهم اضطراب التوحد، التعامل مع الأطفال بفاعلية.",
+        wayOfTraining: "محاضرات تخصصية، تدريب عملي.",
+        targetAudience: "الأخصائيون، أولياء الأمور.",
         imageFile: "دبلومة طيف التوحد.jpg",
       },
       {
@@ -333,6 +482,9 @@ const groups = [
         price: 210,
         discount: 15,
         description: "دبلومة الإعاقات",
+        courseBenefits: "التعرف على أنواع الإعاقات، أساليب الدعم.",
+        wayOfTraining: "شرح علمي، تطبيقات عملية.",
+        targetAudience: "المعلمين، الأخصائيين.",
         imageFile: "دبلومة الإعاقات.jpg",
       },
       {
@@ -340,6 +492,9 @@ const groups = [
         price: 200,
         discount: 15,
         description: "دبلومة تنمية المهارات",
+        courseBenefits: "تنمية القدرات الذهنية والاجتماعية.",
+        wayOfTraining: "أنشطة تدريبية، تمارين تطبيقية.",
+        targetAudience: "الأطفال، الأخصائيون.",
         imageFile: "دبلومة تنمية المهارات.jpg",
       },
       {
@@ -347,6 +502,9 @@ const groups = [
         price: 230,
         discount: 15,
         description: "دبلومة الإرشاد الأسري والزواجي",
+        courseBenefits: "حل المشكلات الأسرية، تحسين العلاقات الزوجية.",
+        wayOfTraining: "جلسات إرشادية، حالات عملية.",
+        targetAudience: "الأخصائيون النفسيون، المرشدون.",
         imageFile: "دبلومة الإرشاد الأسري والزواجي.jpg",
       },
       {
@@ -354,6 +512,9 @@ const groups = [
         price: 230,
         discount: 15,
         description: "دبلومة الصحة النفسية",
+        courseBenefits: "تعزيز الصحة النفسية، فهم الاضطرابات النفسية.",
+        wayOfTraining: "محاضرات علمية، تطبيقات عملية.",
+        targetAudience: "المهتمون بالصحة النفسية.",
         imageFile: "دبلومة الصحة النفسية.jpg",
       },
       {
@@ -361,6 +522,9 @@ const groups = [
         price: 240,
         discount: 15,
         description: "دبلومة علم النفس التكاملية",
+        courseBenefits: "فهم شامل لمدارس علم النفس.",
+        wayOfTraining: "شرح أكاديمي، حالات تطبيقية.",
+        targetAudience: "طلاب علم النفس، الأخصائيون.",
         imageFile: "دبلومة علم النفس التكاملية.jpg",
       },
       {
@@ -368,6 +532,9 @@ const groups = [
         price: 200,
         discount: 10,
         description: "المقاييس والاختبارات النفسية",
+        courseBenefits: "استخدام الاختبارات النفسية بدقة.",
+        wayOfTraining: "تدريب عملي، نماذج تطبيقية.",
+        targetAudience: "الأخصائيون النفسيون.",
         imageFile: "المقاييس والاختبارات النفسية.jpg",
       },
     ],
@@ -438,13 +605,9 @@ async function main() {
     });
 
     if (group) {
-      console.log(`Group "${g.name}" already exists, using existing group.`);
       groupsSkipped++;
       // Ensure the group has the correct instructorId
       if (group.instructorId !== instructorId) {
-        console.log(
-          `Updating instructor for group "${g.name}" to match expected instructor.`
-        );
         group = await prisma.courseGroup.update({
           where: { id: group.id },
           data: { instructorId },
@@ -468,9 +631,54 @@ async function main() {
       });
 
       if (existingCourse) {
-        console.log(
-          `Course "${c.title}" already exists in group "${g.name}", skipping.`
-        );
+        // Update existing course with new fields if they're missing or different
+        const needsUpdate =
+          existingCourse.courseBenefits !== (c.courseBenefits ?? null) ||
+          existingCourse.wayOfTraining !== (c.wayOfTraining ?? null) ||
+          existingCourse.targetAudience !== (c.targetAudience ?? null) ||
+          existingCourse.description !== (c.description ?? null) ||
+          existingCourse.price !== (c.price ?? defPrice) ||
+          existingCourse.discount !== (c.discount ?? defDiscount);
+
+        if (needsUpdate) {
+          // prefer provided imageFile name (sans extension); else use title
+          const baseName = c.imageFile
+            ? stripExt(c.imageFile)
+            : stripExt(c.title);
+          let url = existingCourse.coursePhotoUrl;
+
+          // Try to update photo if imageFile is provided
+          if (c.imageFile) {
+            try {
+              const filePath = await resolveImagePath(g.folder, baseName);
+              const uploaded = await uploadImage(
+                filePath,
+                `edu/courses/${g.name}`
+              );
+              url = uploaded.url;
+            } catch (err) {
+              console.warn(
+                `Skipping photo update for course "${c.title}" in group "${g.name}": ${err.message}`
+              );
+            }
+          }
+
+          await prisma.course.update({
+            where: { id: existingCourse.id },
+            data: {
+              courseBenefits: c.courseBenefits ?? null,
+              wayOfTraining: c.wayOfTraining ?? null,
+              targetAudience: c.targetAudience ?? null,
+              description: c.description ?? null,
+              price: c.price ?? defPrice,
+              discount: c.discount ?? defDiscount,
+              coursePhotoUrl: url,
+            },
+          });
+          console.log(`Updated course: "${c.title}" in group "${g.name}"`);
+        } else {
+          console.log(`Course "${c.title}" already up-to-date, skipping.`);
+        }
         coursesSkipped++;
         continue;
       }
@@ -495,6 +703,9 @@ async function main() {
           instructorId: instructorId,
           coursePhotoUrl: url ?? null,
           description: c.description ?? null,
+          courseBenefits: c.courseBenefits ?? null,
+          wayOfTraining: c.wayOfTraining ?? null,
+          targetAudience: c.targetAudience ?? null,
           price: c.price ?? defPrice,
           discount: c.discount ?? defDiscount,
           groupId: group.id,
