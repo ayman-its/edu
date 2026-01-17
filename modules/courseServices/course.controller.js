@@ -3,24 +3,74 @@ import { uploadFromBuffer, destroy } from "../../middleware/cloudinary.js";
 
 export const createCourseGroup = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, title, instructorId } = req.body;
+    const groupTitle = title || name; // Support both 'title' and 'name' for backward compatibility
 
-    if (!name) {
+    if (!groupTitle) {
       return res.status(400).json({ message: "Group name is required" });
     }
 
+    // Check if instructorId is provided and valid
+    let finalInstructorId = instructorId;
+    if (!finalInstructorId) {
+      // If no instructorId provided, try to get the first instructor as default
+      const firstInstructor = await prisma.instructor.findFirst();
+      if (!firstInstructor) {
+        return res.status(400).json({
+          message:
+            "No instructor found. Please create an instructor first before creating a course group.",
+        });
+      }
+      finalInstructorId = firstInstructor.id;
+    } else {
+      // Validate that the provided instructor exists
+      const instructor = await prisma.instructor.findUnique({
+        where: { id: finalInstructorId },
+      });
+      if (!instructor) {
+        return res.status(404).json({ message: "Instructor not found" });
+      }
+    }
+
     const group = await prisma.courseGroup.create({
-      data: { name },
+      data: {
+        title: groupTitle,
+        instructorId: finalInstructorId,
+      },
     });
 
     res.status(201).json(group);
   } catch (error) {
-    res.status(500).json({ message: "Failed to create course group" });
+    console.error("Error creating course group:", error);
+    // Provide more specific error messages
+    if (error.code === "P2003") {
+      return res.status(400).json({
+        message:
+          "Foreign key constraint failed. Please check that the instructor exists.",
+      });
+    }
+    res.status(500).json({
+      message: "Failed to create course group",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };
 export const deleteCourseGroup = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "Group ID is required" });
+    }
+
+    // Check if group exists
+    const group = await prisma.courseGroup.findUnique({
+      where: { id },
+    });
+
+    if (!group) {
+      return res.status(404).json({ message: "Course group not found" });
+    }
 
     // Check if group has courses
     const coursesCount = await prisma.course.count({
@@ -29,7 +79,8 @@ export const deleteCourseGroup = async (req, res) => {
 
     if (coursesCount > 0) {
       return res.status(400).json({
-        message: "Cannot delete group with existing courses",
+        message:
+          "Cannot delete group with existing courses. Please delete all courses first.",
       });
     }
 
@@ -39,7 +90,11 @@ export const deleteCourseGroup = async (req, res) => {
 
     res.json({ message: "Course group deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete course group" });
+    console.error("Error deleting course group:", error);
+    res.status(500).json({
+      message: "Failed to delete course group",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };
 export const getAllCourseGroups = async (req, res) => {

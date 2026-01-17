@@ -3,7 +3,7 @@ import { uploadFromBuffer } from "../../middleware/cloudinary.js";
 
 export const createLibrary = async (req, res) => {
   try {
-    const { title, content, imageUrl, type } = req.body;
+    const { title, content, type } = req.body;
 
     // Validate title
     if (!title) {
@@ -18,26 +18,14 @@ export const createLibrary = async (req, res) => {
       });
     }
 
-    // 1. UPLOAD PHOTO
-    let libraryImageUrl = imageUrl || null;
-    let photoPublicId = null;
-
-    if (req.file) {
-      const result = await uploadFromBuffer(req.file.buffer, {
-        folder: "edu/library",
-      });
-      libraryImageUrl = result.secure_url;
-      photoPublicId = result.public_id;
-    }
-
     // Build data object
+    // Note: ResearchAbstract schema only has: id, title, ResearchType, content, subTitle, author, degree, university, location
+    // No imageUrl or photoPublicId fields exist in schema
     const library = await prisma.ResearchAbstract.create({
       data: {
         title,
-        type,
+        ResearchType: type, // Schema field is ResearchType, not type
         content: content || null,
-        imageUrl: libraryImageUrl,
-        photoPublicId: photoPublicId,
       },
     });
 
@@ -83,25 +71,54 @@ export const getLibraryById = async (req, res) => {
 export const updateLibrary = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, imageUrl, type } = req.body;
+    const { title, content, type } = req.body;
+
+    // Convert string ID to number
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      return res.status(400).json({ message: "Invalid library ID" });
+    }
+
+    // Check if library item exists
+    const existingLibrary = await prisma.ResearchAbstract.findUnique({
+      where: { id: numericId },
+    });
+
+    if (!existingLibrary) {
+      return res.status(404).json({ message: "Library item not found" });
+    }
 
     let updateData = {};
-    if (title) updateData.title = title;
-    if (content) updateData.content = content;
-    if (type) updateData.type = type;
+    
+    // Allow clearing fields by checking undefined vs empty string
+    if (title !== undefined) {
+      updateData.title = title; // Allow empty string to clear
+    }
+    if (content !== undefined) {
+      updateData.content = content || null; // Allow empty string, convert to null
+    }
+    if (type !== undefined) {
+      // Validate type if provided
+      const validTypes = ["ARABIC_ABSTRACTS", "ENGLISH_ABSTRACTS"];
+      if (type && !validTypes.includes(type)) {
+        return res.status(400).json({
+          message: "Invalid type. Must be ARABIC_ABSTRACTS or ENGLISH_ABSTRACTS",
+        });
+      }
+      // Schema field is ResearchType, not type
+      updateData.ResearchType = type;
+    }
 
-    if (req.file) {
-      const result = await uploadFromBuffer(req.file.buffer, {
-        folder: "edu/library",
-      });
-      updateData.imageUrl = result.secure_url;
-      updateData.photoPublicId = result.public_id;
-    } else if (imageUrl) {
-      updateData.imageUrl = imageUrl;
+    // Note: ResearchAbstract schema doesn't have imageUrl or photoPublicId fields
+    // Image uploads are not supported in the current schema
+
+    // If no fields to update
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: "No fields provided for update" });
     }
 
     const library = await prisma.ResearchAbstract.update({
-      where: { id },
+      where: { id: numericId },
       data: updateData,
     });
     res.json({ message: "Library updated successfully", data: library });
@@ -111,13 +128,29 @@ export const updateLibrary = async (req, res) => {
   }
 };
 
-// deleteLibrary stays the same as your original code
 export const deleteLibrary = async (req, res) => {
   try {
     const { id } = req.params;
-    await prisma.ResearchAbstract.delete({
-      where: { id },
+
+    // Convert string ID to number
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      return res.status(400).json({ message: "Invalid library ID" });
+    }
+
+    // Check if library item exists
+    const existingLibrary = await prisma.ResearchAbstract.findUnique({
+      where: { id: numericId },
     });
+
+    if (!existingLibrary) {
+      return res.status(404).json({ message: "Library item not found" });
+    }
+
+    await prisma.ResearchAbstract.delete({
+      where: { id: numericId },
+    });
+
     res.json({ message: "Library deleted successfully" });
   } catch (error) {
     console.error("Error deleting library:", error);
