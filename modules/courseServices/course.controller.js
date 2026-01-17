@@ -264,13 +264,41 @@ export const updateCourse = async (req, res) => {
       updateData.coursePhotoUrl = photoUrl;
     if (photoPublicId !== undefined && photoPublicId !== null)
       updateData.photoPublicId = photoPublicId;
-    if (description !== undefined) updateData.description = description;
-    if (price !== undefined) updateData.price = price;
-    if (discount !== undefined) updateData.discount = discount;
-    if (courseBenefits !== undefined)
+    if (description !== undefined && description !== null && description !== "")
+      updateData.description = description;
+
+    // Convert price and discount from strings to numbers (FormData sends strings)
+    if (price !== undefined && price !== null && price !== "") {
+      const priceNum = typeof price === "string" ? parseFloat(price) : price;
+      if (!isNaN(priceNum)) {
+        updateData.price = priceNum;
+      }
+    }
+    if (discount !== undefined && discount !== null && discount !== "") {
+      const discountNum =
+        typeof discount === "string" ? parseFloat(discount) : discount;
+      if (!isNaN(discountNum)) {
+        updateData.discount = discountNum;
+      }
+    }
+
+    if (
+      courseBenefits !== undefined &&
+      courseBenefits !== null &&
+      courseBenefits !== ""
+    )
       updateData.courseBenefits = courseBenefits;
-    if (wayOfTraining !== undefined) updateData.wayOfTraining = wayOfTraining;
-    if (targetAudience !== undefined)
+    if (
+      wayOfTraining !== undefined &&
+      wayOfTraining !== null &&
+      wayOfTraining !== ""
+    )
+      updateData.wayOfTraining = wayOfTraining;
+    if (
+      targetAudience !== undefined &&
+      targetAudience !== null &&
+      targetAudience !== ""
+    )
       updateData.targetAudience = targetAudience;
 
     // If no fields to update
@@ -285,7 +313,22 @@ export const updateCourse = async (req, res) => {
     res.json({ message: "Course updated successfully", course });
   } catch (error) {
     console.error("Error updating course:", error);
-    res.status(500).json({ message: "Failed to update course" });
+    // Provide more specific error messages
+    if (error.code === "P2003") {
+      return res.status(400).json({
+        message:
+          "Foreign key constraint failed. Please check that the instructor and group exist.",
+      });
+    }
+    if (error.code === "P2002") {
+      return res.status(400).json({
+        message: "A course with this information already exists.",
+      });
+    }
+    res.status(500).json({
+      message: "Failed to update course",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };
 
