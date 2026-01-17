@@ -8,6 +8,7 @@ import libraryRoutes from "./modules/elecLibrary/library.router.js";
 import instructorsRoutes from "./modules/courseServices/course.router.js";
 import courseRoutes from "./modules/courseServices/course.router.js";
 import homeRoutes from "./modules/home/home.router.js";
+import adminRoutes from "./modules/admin/admin.router.js";
 const app = express();
 
 app.use(
@@ -34,6 +35,7 @@ app.use("/api/course", courseRoutes);
 app.use("/api/articles", articlesRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/instructors", instructorsRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use("/", homeRoutes);
 export default app;

@@ -83,6 +83,26 @@ export const createCourse = async (req, res) => {
     if (!instructorId) {
       return res.status(400).json({ message: "Instructor ID is required" });
     }
+    if (!groupId) {
+      return res.status(400).json({ message: "Group ID is required" });
+    }
+
+    // Validate that instructor exists
+    const instructor = await prisma.instructor.findUnique({
+      where: { id: instructorId },
+    });
+    if (!instructor) {
+      return res.status(404).json({ message: "Instructor not found" });
+    }
+
+    // Validate that group exists
+    const group = await prisma.courseGroup.findUnique({
+      where: { id: groupId },
+    });
+    if (!group) {
+      return res.status(404).json({ message: "Course group not found" });
+    }
+
     // 1. UPLOAD PHOTO
     let photoUrl = coursePhotoUrl || null;
     let photoPublicId = null;
@@ -107,13 +127,41 @@ export const createCourse = async (req, res) => {
       courseData.coursePhotoUrl = photoUrl;
     if (photoPublicId !== undefined && photoPublicId !== null)
       courseData.photoPublicId = photoPublicId;
-    if (description !== undefined) courseData.description = description;
-    if (price !== undefined) courseData.price = price;
-    if (discount !== undefined) courseData.discount = discount;
-    if (courseBenefits !== undefined)
+    if (description !== undefined && description !== null && description !== "")
+      courseData.description = description;
+
+    // Convert price and discount from strings to numbers (FormData sends strings)
+    if (price !== undefined && price !== null && price !== "") {
+      const priceNum = typeof price === "string" ? parseFloat(price) : price;
+      if (!isNaN(priceNum)) {
+        courseData.price = priceNum;
+      }
+    }
+    if (discount !== undefined && discount !== null && discount !== "") {
+      const discountNum =
+        typeof discount === "string" ? parseFloat(discount) : discount;
+      if (!isNaN(discountNum)) {
+        courseData.discount = discountNum;
+      }
+    }
+
+    if (
+      courseBenefits !== undefined &&
+      courseBenefits !== null &&
+      courseBenefits !== ""
+    )
       courseData.courseBenefits = courseBenefits;
-    if (wayOfTraining !== undefined) courseData.wayOfTraining = wayOfTraining;
-    if (targetAudience !== undefined)
+    if (
+      wayOfTraining !== undefined &&
+      wayOfTraining !== null &&
+      wayOfTraining !== ""
+    )
+      courseData.wayOfTraining = wayOfTraining;
+    if (
+      targetAudience !== undefined &&
+      targetAudience !== null &&
+      targetAudience !== ""
+    )
       courseData.targetAudience = targetAudience;
 
     const course = await prisma.course.create({
@@ -122,7 +170,22 @@ export const createCourse = async (req, res) => {
     res.json(course);
   } catch (error) {
     console.error("Error creating course:", error);
-    res.status(500).json({ message: "Failed to create course" });
+    // Provide more specific error messages
+    if (error.code === "P2003") {
+      return res.status(400).json({
+        message:
+          "Foreign key constraint failed. Please check that the instructor and group exist.",
+      });
+    }
+    if (error.code === "P2002") {
+      return res.status(400).json({
+        message: "A course with this information already exists.",
+      });
+    }
+    res.status(500).json({
+      message: "Failed to create course",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
   }
 };
 export const updateCourse = async (req, res) => {
