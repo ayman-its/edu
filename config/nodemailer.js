@@ -17,19 +17,6 @@ const pass = process.env.SMTP_PASS || process.env.GMAIL_AUTH_PASS;
 const host = process.env.SMTP_HOST || "smtp.office365.com";
 const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587;
 
-// Validate credentials
-if (!user || typeof user !== "string" || user.trim() === "") {
-  console.warn(
-    "Warning: SMTP_USER (or GMAIL_AUTH_USER) is not set or is empty. Email functionality may not work."
-  );
-}
-
-if (!pass || typeof pass !== "string" || pass.trim() === "") {
-  console.warn(
-    "Warning: SMTP_PASS (or GMAIL_AUTH_PASS) is not set or is empty. Email functionality may not work."
-  );
-}
-
 // Create transporter for Outlook/Office 365 (GoDaddy-managed)
 export const transporter = nodemailer.createTransport({
   host: host,
