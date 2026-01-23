@@ -109,7 +109,7 @@ export const requestService = async (req, res) => {
 
     const { data, error } = await resend.emails.send({
       from: fromAddress,
-      to: "order@hspportal.com",
+      to: data.email,
       subject: "service request - طلب خدمة",
       html: emailBody,
     });
