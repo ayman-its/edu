@@ -1,5 +1,137 @@
 import prisma from "../../config/prisma.js";
+import { resend } from "../../config/resend.js";
 
+export const requestService = async (req, res) => {
+  try {
+    const { name, email, whatsappCode, whatsappNumber, serviceId, categoryId, request } = req.body;
+
+    // Validation
+    if (!whatsappNumber || !whatsappNumber.trim()) {
+      return res.status(400).json({
+        message: "WhatsApp number is required",
+      });
+    }
+
+    if (!serviceId) {
+      return res.status(400).json({
+        message: "Service ID is required",
+      });
+    }
+
+    // Fetch service details
+    let service = null;
+    if (serviceId) {
+      service = await prisma.academicService.findUnique({
+        where: { id: serviceId },
+        select: {
+          id: true,
+          title: true,
+        },
+      });
+
+      if (!service) {
+        return res.status(404).json({
+          message: "Service not found",
+        });
+      }
+    }
+
+    // Fetch category details
+    let category = null;
+    if (categoryId) {
+      category = await prisma.academicCategory.findUnique({
+        where: { id: categoryId },
+        select: {
+          id: true,
+          title: true,
+        },
+      });
+    }
+
+    // Combine WhatsApp code and number
+    const fullWhatsAppNumber = `${whatsappCode || ""}${whatsappNumber}`.trim();
+
+    // Format email body with HTML
+    const emailBody = `
+      <html dir="rtl" lang="ar">
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #0B72B9; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+            .field { margin-bottom: 15px; padding: 10px; background-color: #f9f9f9; border-radius: 5px; }
+            .label { font-weight: bold; color: #0B72B9; margin-bottom: 5px; }
+            .value { color: #333; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h2>طلب خدمة جديدة - New Service Request</h2>
+            </div>
+            <div class="field">
+              <div class="label">الإسم / Name:</div>
+              <div class="value">${name || "غير محدد / Not provided"}</div>
+            </div>
+            <div class="field">
+              <div class="label">البريد الإلكتروني / Email:</div>
+              <div class="value text-black">${email || "غير محدد / Not provided"}</div>
+            </div>
+            <div class="field">
+              <div class="label">رقم الواتس اب / WhatsApp Number:</div>
+              <div class="value">${fullWhatsAppNumber}</div>
+            </div>
+            ${category ? `
+            <div class="field">
+              <div class="label">الفئة / Category:</div>
+              <div class="value">${category.title}</div>
+            </div>
+            ` : ""}
+            ${service ? `
+            <div class="field">
+              <div class="label">الخدمة / Service:</div>
+              <div class="value">${service.title}</div>
+            </div>
+            ` : ""}
+            <div class="field">
+              <div class="label">طلبكم / Request:</div>
+              <div class="value">${request || "لا يوجد / None"}</div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Send email using Resend
+    // RESEND_FROM must be a verified domain in Resend (e.g. order@hspportal.com)
+    const fromAddress = process.env.RESEND_FROM || "order@hspportal.com";
+
+    const { data, error } = await resend.emails.send({
+      from: fromAddress,
+      to: "order@hspportal.com",
+      subject: "service request - طلب خدمة",
+      html: emailBody,
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return res.status(500).json({
+        message: "Failed to send email",
+        error: process.env.NODE_ENV === "development" ? error.message : undefined,
+      });
+    }
+
+    console.log("Email sent successfully to order@hspportal.com, id:", data?.id);
+    return res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error requesting service:", error);
+    return res.status(500).json({
+      message: "Failed to request service",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
+    });
+  }
+};
 // ============================================
 // CATEGORY OPERATIONS
 // ============================================

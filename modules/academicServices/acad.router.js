@@ -5,6 +5,7 @@ import {
   deleteCategory,
   getAllCategories,
   getCategoryById,
+  requestService,
   // Service operations
   getAllServices,
   getServicesByCategoryId,
@@ -77,6 +78,7 @@ router.post("/services", createService);
  * Update academic service by service ID
  */
 router.put("/services/:id", updateService);
+router.post("/services/request", requestService);
 
 /**
  * DELETE /api/academic/services/:id
