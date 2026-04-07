@@ -165,7 +165,7 @@ export const createCourse = async (req, res) => {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/courses",
         quality: "auto",
-        format: "auto",
+        fetch_format: "auto",
       });
       photoUrl = result.secure_url;
       photoPublicId = result.public_id;
@@ -281,7 +281,7 @@ export const updateCourse = async (req, res) => {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/courses",
         quality: "auto",
-        format: "auto",
+        fetch_format: "auto",
       });
       photoUrl = result.secure_url;
       photoPublicId = result.public_id;
@@ -600,7 +600,7 @@ export const createCourseInstructor = async (req, res) => {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/instructors",
         quality: "auto",
-        format: "auto",
+        fetch_format: "auto",
       });
       instructorPhotoUrl = result.secure_url;
       photoPublicId = result.public_id;
@@ -651,7 +651,7 @@ export const updateCourseInstructor = async (req, res) => {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/instructors",
         quality: "auto",
-        format: "auto",
+        fetch_format: "auto",
       });
       instructorPhotoUrl = result.secure_url;
       photoPublicId = result.public_id;

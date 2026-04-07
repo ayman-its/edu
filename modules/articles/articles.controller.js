@@ -17,7 +17,7 @@ export const createArticle = async (req, res) => {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/articles",
         quality: "auto",
-        format: "auto",
+        fetch_format: "auto",
       });
       articleImageUrl = result.secure_url;
     }
@@ -149,7 +149,7 @@ export const updateArticle = async (req, res) => {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/articles",
         quality: "auto",
-        format: "auto",
+        fetch_format: "auto",
       });
       updateData.imageUrl = result.secure_url;
     } else if (imageUrl !== undefined) {
