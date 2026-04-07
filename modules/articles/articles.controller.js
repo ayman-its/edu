@@ -1,5 +1,5 @@
 import prisma from "../../config/prisma.js";
-import { uploadFromBuffer } from "../../middleware/cloudinary.js";
+import { uploadFromBuffer, destroy } from "../../middleware/cloudinary.js";
 
 export const createArticle = async (req, res) => {
   try {
@@ -12,6 +12,7 @@ export const createArticle = async (req, res) => {
 
     // 1. UPLOAD PHOTO
     let articleImageUrl = imageUrl || null;
+    let imagePublicId = null;
 
     if (req.file) {
       const result = await uploadFromBuffer(req.file.buffer, {
@@ -20,6 +21,7 @@ export const createArticle = async (req, res) => {
         fetch_format: "auto",
       });
       articleImageUrl = result.secure_url;
+      imagePublicId = result.public_id;
     }
 
     // Build data object
@@ -33,6 +35,8 @@ export const createArticle = async (req, res) => {
       articleData.content = content;
     if (articleImageUrl !== undefined && articleImageUrl !== null)
       articleData.imageUrl = articleImageUrl;
+    if (imagePublicId !== undefined && imagePublicId !== null)
+      articleData.imagePublicId = imagePublicId;
 
     const article = await prisma.article.create({
       data: articleData,
@@ -145,6 +149,7 @@ export const updateArticle = async (req, res) => {
 
     // Handle image update
     // Note: article schema only has: id, title, content, imageUrl
+    let oldImagePublicId = existingArticle.imagePublicId;
     if (req.file) {
       const result = await uploadFromBuffer(req.file.buffer, {
         folder: "edu/articles",
@@ -152,8 +157,21 @@ export const updateArticle = async (req, res) => {
         fetch_format: "auto",
       });
       updateData.imageUrl = result.secure_url;
+      updateData.imagePublicId = result.public_id;
+
+      // Delete old image from Cloudinary if it exists
+      if (oldImagePublicId) {
+        try {
+          await destroy(oldImagePublicId);
+        } catch (error) {
+          console.error("Error deleting old image from Cloudinary:", error);
+          // Continue even if deletion fails
+        }
+      }
     } else if (imageUrl !== undefined) {
       updateData.imageUrl = imageUrl;
+      // If setting imageUrl manually, clear the publicId since we don't know it
+      updateData.imagePublicId = null;
     }
 
     // If no fields to update
@@ -185,6 +203,16 @@ export const deleteArticle = async (req, res) => {
 
     if (!existingArticle) {
       return res.status(404).json({ message: "Article not found" });
+    }
+
+    // Delete image from Cloudinary if it exists
+    if (existingArticle.imagePublicId) {
+      try {
+        await destroy(existingArticle.imagePublicId);
+      } catch (error) {
+        console.error("Error deleting image from Cloudinary:", error);
+        // Continue even if deletion fails
+      }
     }
 
     await prisma.article.delete({
