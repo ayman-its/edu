@@ -135,19 +135,18 @@ export const createCourse = async (req, res) => {
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
-    if (!instructorId) {
-      return res.status(400).json({ message: "Instructor ID is required" });
-    }
     if (!groupId) {
       return res.status(400).json({ message: "Group ID is required" });
     }
 
-    // Validate that instructor exists
-    const instructor = await prisma.instructor.findUnique({
-      where: { id: instructorId },
-    });
-    if (!instructor) {
-      return res.status(404).json({ message: "Instructor not found" });
+    // Validate that instructor exists (only if instructorId is provided)
+    if (instructorId) {
+      const instructor = await prisma.instructor.findUnique({
+        where: { id: instructorId },
+      });
+      if (!instructor) {
+        return res.status(404).json({ message: "Instructor not found" });
+      }
     }
 
     // Validate that group exists
@@ -173,9 +172,12 @@ export const createCourse = async (req, res) => {
     // Build data object with only provided optional fields
     const courseData = {
       title,
-      instructorId,
       groupId,
     };
+
+    // Add instructorId only if provided
+    if (instructorId !== undefined && instructorId !== null && instructorId !== "")
+      courseData.instructorId = instructorId;
 
     // Add optional fields only if they are provided
     if (photoUrl !== undefined && photoUrl !== null)

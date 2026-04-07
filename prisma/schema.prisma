@@ -85,8 +85,8 @@ model Course {
   discount        Float?     
   groupId         String
   group           CourseGroup @relation(fields: [groupId], references: [id])
-  instructorId    String
-  instructor      Instructor  @relation(fields: [instructorId], references: [id])
+  instructorId    String?
+  instructor      Instructor? @relation(fields: [instructorId], references: [id])
   createdAt       DateTime    @default(now())
 }
 
