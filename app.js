@@ -23,7 +23,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api", homeRouter);
-app.use("/api", courseRouter);
+app.use("/api/course", courseRouter);
 app.use("/api/academic", academicRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/articles", articlesRouter);
