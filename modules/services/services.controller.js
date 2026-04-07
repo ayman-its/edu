@@ -1,4 +1,6 @@
-const getServices = async (req, res) => {
+import prisma from "../../config/prisma.js";
+
+export const getServices = async (req, res) => {
     try {
         const services = await prisma.service.findMany();
         res.status(200).json(services);
@@ -7,7 +9,7 @@ const getServices = async (req, res) => {
     }
 }
 
-const getServiceById = async (req, res) => {
+export const getServiceById = async (req, res) => {
     try {
         const { id } = req.params;
         const service = await prisma.service.findUnique({
@@ -22,7 +24,7 @@ const getServiceById = async (req, res) => {
     }
 }
 
-const createService = async (req, res) => {
+export const createService = async (req, res) => {
     try {
         const { name, description, categoryId } = req.body;
         const service = await prisma.service.create({
@@ -33,7 +35,8 @@ const createService = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
-const updateService = async (req, res) => {
+
+export const updateService = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, categoryId } = req.body;
@@ -46,7 +49,8 @@ const updateService = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
-const deleteService = async (req, res) => {
+
+export const deleteService = async (req, res) => {
     try {
         const { id } = req.params;
         await prisma.service.delete({ where: { id } });
@@ -55,4 +59,3 @@ const deleteService = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
-module.exports = { getServices, getServiceById, createService, updateService, deleteService };
